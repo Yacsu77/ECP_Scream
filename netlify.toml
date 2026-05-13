@@ -1,0 +1,12 @@
+# Netlify — build do cliente Vite em subpasta com espaço no nome.
+# Documentação: https://docs.netlify.com/build/configure-builds/file-based-configuration/
+
+[build]
+  # Da raiz do repositório: entrar na pasta do cliente, instalar e compilar.
+  command = "cd \"Front End/client\" && npm ci && npm run build"
+  # Ficheiros estáticos gerados pelo Vite (caminho relativo à raiz do repo).
+  publish = "Front End/client/dist"
+
+# Node moderno para Vite 8 + TypeScript 6
+[build.environment]
+  NODE_VERSION = "20"

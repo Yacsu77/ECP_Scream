@@ -68,6 +68,33 @@ npm run build
 # Output in Front End/client/dist/
 ```
 
+### Preview the production build locally
+
+```bash
+cd "Front End/client"
+npm run preview
+```
+
+Opens a local server (default **http://localhost:4173**) serving the same files you would ship to production.
+
+---
+
+## Deploy as a website (static hosting)
+
+The frontend is a **static SPA** after build: upload the contents of `Front End/client/dist/` to any static host.
+
+1. Build: `cd "Front End/client" && npm install && npm run build`
+2. Publish the **`dist/`** folder (not `src/`):
+   - [Vercel](https://vercel.com): import the repo, set **Root Directory** to `Front End/client`, framework Vite (build `npm run build`, output `dist`)
+   - [Netlify](https://netlify.com): o repositório já inclui **`netlify.toml`** na raiz com `command` e `publish` corretos. Nos site settings do Netlify, **limpa** o “Build command” e **Publish directory** personalizados no painel (deixa o ficheiro mandar) **ou** usa manualmente:
+     - **Build command:** `cd "Front End/client" && npm ci && npm run build`  
+       (obrigatório usar `&&` entre comandos; sem isso o erro `cd: too many arguments` aparece.)
+     - **Publish directory:** `Front End/client/dist`  
+       (não uses só a raiz do repo; o Vite gera tudo dentro de `dist` do cliente.)
+   - [Cloudflare Pages](https://pages.cloudflare.com): build command `npm run build`, output `dist`
+
+No Node server is required in production for the main app (models load in the browser). The optional **Back end** is separate: deploy it only if you need server uploads (e.g. a small VPS or Railway/Render with `npm start` after `npm run build` in `Back end/`).
+
 ---
 
 ## Browser Compatibility

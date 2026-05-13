@@ -1,0 +1,109 @@
+{
+    "projectName": "3DModelVideoRecorder",
+    "description": "Aplicação web para upload de modelos 3D (GLB/STL), visualização interativa com rotação via mouse, gravação automática de vídeo de até 30 segundos em MP4, com tela bloqueada durante a gravação. Cliente-side heavy (modelo só existe enquanto a aba estiver aberta).",
+    "techStack": {
+      "frontend": "React 18+ com Vite",
+      "3d": "Three.js (latest) + @react-three/fiber + @react-three/drei",
+      "animation": "GSAP",
+      "performance": "Stats.js",
+      "ui": "Tailwind CSS + shadcn/ui ou Radix",
+      "recording": "MediaRecorder API + canvas.captureStream() (nativo, sem libs pesadas extras)",
+      "backend": "Node.js + Express (opcional para upload/serve files se precisar persistir temporariamente)"
+    },
+    "noAuth": true,
+    "constraints": {
+      "videoMaxDuration": 30,
+      "formats": ["glb", "stl"],
+      "duringRecording": "Desabilitar controles de rotação e mostrar overlay 'Gravando...' com spinner"
+    },
+    "dependencies": {
+      "frontend": [
+        "vite",
+        "react", "react-dom",
+        "@react-three/fiber", "@react-three/drei",
+        "three",
+        "gsap",
+        "stats.js",
+        "tailwindcss", "postcss", "autoprefixer",
+        "@types/three", "@types/node",
+        "file-saver" // opcional para download
+      ],
+      "backend": [
+        "express",
+        "cors",
+        "multer" // para upload de arquivos se usar backend
+      ],
+      "dev": ["@vitejs/plugin-react", "typescript"]
+    },
+    "folderStructure": {
+      "root": {
+        "client": {
+          "src": {
+            "assets": ["models/ (exemplos .glb/.stl)"],
+            "components": {
+              "ui": ["Button.tsx", "UploadZone.tsx", "RecordingOverlay.tsx"],
+              "three": ["Scene3D.tsx", "ModelLoader.tsx", "Controls.tsx"]
+            },
+            "features": {
+              "modelViewer": {
+                "components": [],
+                "hooks": ["useModelLoader.ts", "useRecording.ts", "useOrbitControls.ts"],
+                "services": ["threeSceneService.ts"]
+              }
+            },
+            "hooks": ["useFileUpload.ts", "useTimer.ts"],
+            "lib": ["utils.ts", "constants.ts"],
+            "store": ["useViewerStore.ts (Zustand ou Context)"],
+            "styles": ["globals.css"],
+            "App.tsx": "",
+            "main.tsx": ""
+          },
+          "public": [],
+          "vite.config.ts": "",
+          "tailwind.config.js": "",
+          "package.json": ""
+        },
+        "server": {
+          "src": {
+            "controllers": [],
+            "routes": ["uploadRoutes.ts"],
+            "middleware": [],
+            "config": [],
+            "server.ts": ""
+          },
+          "uploads": "temp/"
+        }
+      }
+    },
+    "designPatternsAndSOLID": {
+      "principles": [
+        "Single Responsibility: Cada hook/componente/service tem uma única responsabilidade",
+        "Open/Closed: Extensível via composição (ex: diferentes loaders)",
+        "Liskov Substitution: Loaders (GLTFLoader / STLLoader) intercambiáveis",
+        "Interface Segregation: Interfaces pequenas para controls e recording",
+        "Dependency Inversion: ThreeSceneService injeta loaders e controls"
+      ],
+      "patterns": [
+        "Factory Pattern: para criar loaders (GLB vs STL)",
+        "Observer/Pub-Sub: via Zustand ou EventEmitter para status de gravação",
+        "Facade: ThreeSceneFacade para encapsular cena, câmera, lights, renderer",
+        "Command: para ações de Record/Stop/Rotate"
+      ]
+    },
+    "initialTasks": [
+      "1. Criar projeto Vite React + TS: `npm create vite@latest client -- --template react-ts`",
+      "2. Instalar todas as dependências do frontend",
+      "3. Configurar Tailwind",
+      "4. Criar estrutura de pastas exatamente como acima",
+      "5. Implementar upload drag-and-drop (File API)",
+      "6. Criar cena Three.js básica com lights, camera (Perspective), OrbitControls",
+      "7. Implementar loaders: GLTFLoader para .glb e STLLoader para .stl",
+      "8. Adicionar GSAP para animações suaves de rotação/auto-spin",
+      "9. Implementar gravação: canvas.captureStream(30) + MediaRecorder → MP4 (ou WebM convertido)",
+      "10. Durante gravação: disable OrbitControls + mostrar overlay",
+      "11. Botão 'Gravar Vídeo (30s)' que inicia rotação automática suave + gravação",
+      "12. Download automático do MP4 ao finalizar"
+    ],
+    "recordingImplementationNotes": "Use MediaRecorder + canvas.captureStream(30). Para MP4 nativo pode precisar de 'video/mp4' mimeType (suporte varia por browser). Alternativa: gravar WebM e sugerir conversão.",
+    "nextStepsAfterSetup": "Implementar a Scene3D.tsx com React Three Fiber, depois o hook de recording."
+  }
